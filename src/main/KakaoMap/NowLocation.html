@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=61d9e4c3afa2abbdabfc0176613eef99"></script>
+    <title>Kakao 지도 시작하기</title>
+</head>
+
+<body>
+<div id="map" style="width:500px;height:400px;"></div>
+<script>
+    var container = document.getElementById('map');
+    var options = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        level: 3
+    };
+
+    var map = new kakao.maps.Map(container, options);
+
+    function currentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude,
+                    lon = position.coords.longitude;
+
+                var locPosition = new kakao.maps.LatLng(lat, lon);
+                var message = '<div style="padding:5px;">현위치</div>';
+
+                displayMarker(locPosition, message);
+            });
+        } else {
+            var locPosition = new kakao.maps.LatLng(37.4812845080678, 126.952713197762);
+            var message = '현재 위치를 알 수 없어 기본 위치로 이동합니다.';
+            displayMarker(locPosition, message);
+        }
+        return true;
+    }
+    currentLocation();
+
+    function displayMarker(locPosition, message) {
+        var imageSize = new kakao.maps.Size(24, 35);
+        var markerImage = new kakao.maps.MarkerImage('witch.png', imageSize);
+
+        var marker = new kakao.maps.Marker({
+            map: map,
+            position: locPosition,
+            image: markerImage
+        });
+
+        var infowindow = new kakao.maps.InfoWindow({
+            content: message,
+            removable: true
+        });
+
+        infowindow.open(map, marker);
+        map.setCenter(locPosition);
+    }
+</script>
+</body>
+
+</html>
